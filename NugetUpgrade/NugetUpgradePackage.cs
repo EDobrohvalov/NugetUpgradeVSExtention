@@ -39,9 +39,6 @@ namespace NugetUpgrade
             Instance = this;
             await this.JoinableTaskFactory.SwitchToMainThreadAsync(cancellationToken);
             await UpgradePackages.InitializeAsync(this);
-
-
         }
-
     }
 }

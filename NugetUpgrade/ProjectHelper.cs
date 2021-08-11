@@ -54,7 +54,7 @@ namespace NugetUpgrade
 
         public static string GetFullPath(this Project project)
         {
-            return project.Properties.Item("FullPath").Value.ToString();
+            return project.GetRootFolder();
         }
 
         public static string GetRootFolder(this Project project)
@@ -114,8 +114,7 @@ namespace NugetUpgrade
                 }
             }
             catch (Exception ex)
-            {
-                //  Logger.Log(ex);
+            {               
             }
         }
 
@@ -169,9 +168,6 @@ namespace NugetUpgrade
         {
             try
             {
-                //if (parent.Kind != ProjectKinds.vsProjectKindSolutionFolder && parent.Collection == null)  // Unloaded
-                //    return Enumerable.Empty<Project>();
-
                 if (!string.IsNullOrEmpty(parent.FullName))
                     return new[] { parent };
             }
@@ -203,7 +199,7 @@ namespace NugetUpgrade
             }
             catch (Exception ex)
             {
-                //  Logger.Log("Error getting the active project" + ex);
+
             }
 
             return null;
@@ -223,7 +219,6 @@ namespace NugetUpgrade
             }
             catch (Exception ex)
             {
-                //   Logger.Log(ex);
                 return false;
             }
         }

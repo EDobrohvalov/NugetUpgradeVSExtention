@@ -11,7 +11,9 @@ C:\dev\NugetUpgrade\NugetUpgrade\obj\Debug\VSCT.read.1.tlog
 C:\dev\NugetUpgrade\NugetUpgrade\obj\Debug\VSCT.write.1.tlog
 C:\dev\NugetUpgrade\NugetUpgrade\obj\Debug\resources.json
 C:\dev\NugetUpgrade\NugetUpgrade\obj\Debug\ctoFiles.json
+C:\dev\NugetUpgrade\NugetUpgrade\obj\Debug\_EmptyResource.resources.original
 C:\dev\NugetUpgrade\NugetUpgrade\obj\Debug\mergeCto.cache
+C:\dev\NugetUpgrade\NugetUpgrade\obj\Debug\NugetUpgrade.GeneratedMSBuildEditorConfig.editorconfig
 C:\dev\NugetUpgrade\NugetUpgrade\obj\Debug\NugetUpgrade.csproj.CoreCompileInputs.cache
 C:\dev\NugetUpgrade\NugetUpgrade\obj\Debug\NugetUpgrade.dll
 C:\dev\NugetUpgrade\NugetUpgrade\obj\Debug\NugetUpgrade.pdb
@@ -20,5 +22,3 @@ C:\dev\NugetUpgrade\NugetUpgrade\obj\Debug\NugetUpgrade.latest.pkgdef
 C:\dev\NugetUpgrade\NugetUpgrade\obj\Debug\extension.vsixmanifest
 C:\dev\NugetUpgrade\NugetUpgrade\obj\Debug\files.json
 C:\dev\NugetUpgrade\NugetUpgrade\obj\Debug\createTemplateManifests.cache
-C:\dev\NugetUpgrade\NugetUpgrade\obj\Debug\NugetUpgrade.GeneratedMSBuildEditorConfig.editorconfig
-C:\dev\NugetUpgrade\NugetUpgrade\obj\Debug\_EmptyResource.resources.original

@@ -27,9 +27,9 @@ namespace NugetUpgrade
         private static bool _isProcessing;
         public static DTE2 _dte;
 
-        
+
         public static UpgradePackages Instance;
-       
+
 
         private UpgradePackages(AsyncPackage package, OleMenuCommandService commandService, DTE2 dte)
         {
@@ -51,12 +51,11 @@ namespace NugetUpgrade
         }
 
         public static async Task InitializeAsync(AsyncPackage package)
-        {          
+        {
             await ThreadHelper.JoinableTaskFactory.SwitchToMainThreadAsync(package.DisposalToken);
             OleMenuCommandService commandService = await package.GetServiceAsync(typeof(IMenuCommandService)) as OleMenuCommandService;
             DTE2 dte = await package.GetServiceAsync(typeof(DTE)) as DTE2;
-            Instance = new UpgradePackages(package, commandService, dte);
-            await Logger.InitializeAsync(package);
+            Instance = new UpgradePackages(package, commandService, dte);           
         }
 
         private void Execute(object sender, EventArgs e)
@@ -71,13 +70,13 @@ namespace NugetUpgrade
             ThreadHelper.ThrowIfNotOnUIThread();
             _isProcessing = true;
 
-            var projects = ProjectHelpers.GetAllProjects().Where(c => File.Exists(c.GetFullPath()+ @"\packages.config"));
+            var projects = ProjectHelpers.GetAllProjects().Where(c => File.Exists(c.GetFullPath() + @"\packages.config")).ToArray();
 
             if (!projects.Any())
             {
                 _dte.StatusBar.Text = "Please select a package.config file to nuke from orbit.";
                 _isProcessing = false;
-                return;
+                return; 
             }
 
             //var projectFolder = ProjectHelpers.GetRootFolder(ProjectHelpers.GetActiveProject());
@@ -92,6 +91,8 @@ namespace NugetUpgrade
                 string text = count == 1 ? " file" : " files";
                 _dte.StatusBar.Progress(true, $"Fixing {count} config {text}...", AmountCompleted: 1, Total: count + 1);
 
+                //for (int i = 0; i < count; i++)
+
                 Parallel.For(0, count, options, i =>
                 {
                     var packageReferences = new XElement(defaultNs + "ItemGroup");
@@ -103,7 +104,7 @@ namespace NugetUpgrade
                     File.Copy(packagesConfigPath, $"{packagesConfigPath}.bak", true);
                     File.Copy(projectPath, $"{projectPath}.bak", true);
 
-                   // Logger.Instance.LogAsync($"Backup created for {packagesConfigPath}.").Wait();
+                    // Logger.Instance.LogAsync($"Backup created for {packagesConfigPath}.").Wait();
 
                     //RWM: Load the files.
                     var project = XDocument.Load(projectPath);
@@ -128,7 +129,8 @@ namespace NugetUpgrade
                         oldReferences.Where(c => c.Descendants().Any(d => d.Value.Contains(row.Attribute("id").Value))).ToList()
                             .ForEach(c => c.Remove());
                         //RWM: Remove any Error conditions for missing Package Targets.
-                        errors.Where(c => c.Attribute("Condition").Value.Contains(row.Attribute("id").Value)).ToList()
+                        errors.Where(c => c.Attribute("Condition") != null)
+                            .Where(c => c.Attribute("Condition").Value.Contains(row.Attribute("id").Value)).ToList()
                             .ForEach(c => c.Remove());
                         //RWM: Remove any Package Targets.
                         targets.Where(c => c.Attribute("Project").Value.Contains(row.Attribute("id").Value)).ToList()
@@ -158,17 +160,12 @@ namespace NugetUpgrade
                     project.Save(projectPath, SaveOptions.None);
                     File.Delete(packagesConfigPath);
 
-                 //   Logger.Instance.LogAsync($"Update complete. Visual Studio will prompt you to reload the project now.").Wait();
                 });
             }
             catch (AggregateException agEx)
             {
                 _dte.StatusBar.Progress(false);
-               // Logger.Instance.LogAsync($"Update failed. Exceptions:").Wait();
-                //foreach (var ex in agEx.InnerExceptions)
-                //{
-                ////    Logger.Instance.LogAsync($"Message: {ex.Message}{Environment.NewLine}{ex.StackTrace}").Wait();
-                //}
+
                 _dte.StatusBar.Text = "Operation failed. Please see Output Window for details.";
                 _isProcessing = false;
 
